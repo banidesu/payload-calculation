@@ -8,21 +8,23 @@ use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
-    public function Login() {
+    public function Login()
+    {
         if (Auth::check()) {
             return redirect('home');
         } else {
-            return view('login');
+            return view('auth.login');
         }
     }
 
-    public function actionLogin(Request $request) {
-        $data = [
-            'email' => $request->input('email'),
-            'password' => $request->input('password'),
-        ];
-
-        if (Auth::attempt($data)) {
+    public function actionLogin(Request $request)
+    {
+        $data = $request->only('email', 'password');
+        // dd($data, password_hash($request->input('password'), PASSWORD_DEFAULT));
+        if (Auth::viaRemember()) {
+            return redirect('home');
+        }
+        if (Auth::attempt($data, true)) {
             return redirect('home');
         } else {
             Session::flash('error', 'Email atau Password Salah');
@@ -30,7 +32,8 @@ class LoginController extends Controller
         }
     }
 
-    public function actionLogout() {
+    public function actionLogout()
+    {
         Auth::logout();
         return redirect('/');
     }
