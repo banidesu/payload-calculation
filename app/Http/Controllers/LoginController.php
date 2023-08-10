@@ -21,9 +21,9 @@ class LoginController extends Controller
     {
         $data = $request->only('email', 'password');
         // dd($data, password_hash($request->input('password'), PASSWORD_DEFAULT));
-        if (Auth::viaRemember()) {
-            return redirect('home');
-        }
+        // if (Auth::viaRemember()) {
+        //     return redirect('home');
+        // }
         if (Auth::attempt($data, true)) {
             return redirect('home');
         } else {
